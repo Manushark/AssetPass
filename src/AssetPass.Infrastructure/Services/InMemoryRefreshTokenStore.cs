@@ -42,6 +42,13 @@ public sealed class InMemoryRefreshTokenStore : IRefreshTokenStore
     }
 
     /// <inheritdoc />
+    public Task RevokeTokenAsync(string refreshToken, CancellationToken ct = default)
+    {
+        _tokens.TryRemove(refreshToken, out _);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
     public Task RevokeAllAsync(string identityUserId, CancellationToken ct = default)
     {
         var toRemove = _tokens
