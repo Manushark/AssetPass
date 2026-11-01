@@ -61,18 +61,18 @@ frontend/
 - [x] Identify risks
 - [x] Create initial documentation
 
-### PHASE 1 — Foundation
-- [ ] Initialize Git repository
-- [ ] Create .NET solution structure (Clean Architecture)
-- [ ] Create Angular project
-- [ ] Configure Docker & Docker Compose
-- [ ] Set up PostgreSQL container
-- [ ] Create Domain entities (core models)
-- [ ] Create DbContext with tenant isolation
-- [ ] Create initial EF Core migration
-- [ ] Configure Swagger/OpenAPI
-- [ ] Create .env.example and configuration system
-- [ ] Verify database creation from scratch
+### PHASE 1 — Foundation 🔄 (In Progress)
+- [x] Initialize Git repository (GitHub remote, GitFlow main/develop, granular commits)
+- [x] Create .NET solution structure (Clean Architecture: Domain, Application, Infrastructure, Api)
+- [x] Create Angular project (Angular 21 SPA, TypeScript strict, Vitest)
+- [x] Configure Docker & Docker Compose (docker-compose.yml, multi-stage Dockerfile)
+- [ ] Set up PostgreSQL container (running database instance)
+- [x] Create Domain entities (core models, enums, BaseEntity)
+- [x] Create DbContext with tenant isolation (ApplicationDbContext with query filters)
+- [x] Create initial EF Core migration (InitialCreate generated)
+- [x] Configure Swagger/OpenAPI (Swashbuckle 6.6.2 with JWT Bearer security scheme)
+- [x] Create .env.example and configuration system (appsettings, rate limiting, CORS)
+- [ ] Verify database creation from scratch (apply migration to active database)
 
 ### PHASE 2 — Authentication & Multi-tenancy
 - [ ] ASP.NET Core Identity setup with PostgreSQL
