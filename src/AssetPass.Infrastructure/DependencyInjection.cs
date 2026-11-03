@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AssetPass.Infrastructure;
 
@@ -65,6 +66,15 @@ public static class DependencyInjection
 
         // Email service (mock for development)
         services.AddSingleton<IEmailService, MockEmailService>();
+
+        // Identity service abstraction
+        services.AddScoped<IIdentityService, IdentityService>();
+
+        // Refresh token store (in-memory for dev; replace with DB-backed store in production)
+        services.AddSingleton<IRefreshTokenStore, InMemoryRefreshTokenStore>();
+
+        // JWT token service
+        services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
         return services;
     }
