@@ -82,7 +82,7 @@ frontend/
 - [x] Login endpoint with JWT + refresh token (`POST /api/auth/login`)
 - [x] Refresh token rotation endpoint (`POST /api/auth/refresh-token`)
 - [x] Brute force protection (Identity lockout policy + IP rate limiting)
-- [ ] Logout endpoint & token revocation
+- [x] Logout endpoint & token revocation (`POST /api/auth/logout`)
 - [ ] Password recovery flow
 - [ ] Password change
 - [ ] Role system (Owner, Administrator, Technician, Viewer permissions)
