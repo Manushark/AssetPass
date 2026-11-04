@@ -1,10 +1,14 @@
 using System.Text;
+using AssetPass.Api.Controllers;
 using AssetPass.Api.Middleware;
 using AssetPass.Api.Services;
+using AssetPass.Application.Features.Auth.Commands.Login;
+using AssetPass.Application.Features.Auth.Commands.RefreshToken;
+using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
 using AssetPass.Application.Interfaces;
 using AssetPass.Infrastructure;
-using AssetPass.Infrastructure.Identity;
 using AspNetCoreRateLimit;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -15,14 +19,14 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICES
 // ============================================================
 
-// Infrastructure (Database, Identity, File Storage, Email)
+// Infrastructure (Database, Identity, File Storage, Email, JWT, Refresh Tokens)
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Tenant Context (derived from JWT claims)
+// Tenant Context (derived from JWT claims — TenantId never comes from the client body)
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 
-// JWT Authentication
+// JWT Authentication middleware
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key not configured. Set Jwt:Key in configuration.");
 
@@ -48,8 +52,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// JWT Token Service
-builder.Services.AddScoped<JwtTokenService>();
+// FluentValidation validators (registered from Application assembly)
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterTenantCommandValidator>();
+
+// Application command handlers (direct injection, no MediatR)
+builder.Services.AddScoped<RegisterTenantCommandHandler>();
+builder.Services.AddScoped<LoginCommandHandler>();
+builder.Services.AddScoped<RefreshTokenCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>
