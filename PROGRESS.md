@@ -1,6 +1,6 @@
 # AssetPass — Progress Report
 
-## Overall Status: Phase 1 — Foundation (95% Completed) 🔄
+## Overall Status: Phase 2 — Authentication & Multi-tenancy (Midpoint Reached - 50%) 🔄
 
 ### Phase 0 — Research & Planning ✅ Completed
 - [x] ~~Environment inspection~~
@@ -11,7 +11,7 @@
 - [x] ~~Risks identified~~
 - [x] ~~Initial documentation created~~
 
-### Phase 1 — Foundation 🔄 Almost Completed
+### Phase 1 — Foundation ✅ Completed (Codebase Ready)
 - [x] ~~Git repository initialization (GitHub remote connected, GitFlow main/develop, granular commit conventions)~~
 - [x] ~~.NET 9 solution structure (Domain, Application, Infrastructure, Api + 4 test projects)~~
 - [x] ~~Angular 21 project setup (assetpass-web with strict TypeScript, standalone components, Vitest)~~
@@ -24,10 +24,13 @@
 
 ---
 
-### Phase 2 — Authentication & Multi-tenancy ⏳ Next Up
-- [ ] Company (Tenant) registration endpoint
-- [ ] User registration (admin for new tenant)
-- [ ] Login endpoint (JWT + refresh token)
+### Phase 2 — Authentication & Multi-tenancy 🔄 Midpoint Reached (50%)
+- [x] ~~Company (Tenant) registration endpoint (`POST /api/auth/register`)~~
+- [x] ~~User registration (admin / Owner for new tenant)~~
+- [x] ~~Login endpoint with JWT + refresh token (`POST /api/auth/login`)~~
+- [x] ~~Refresh token rotation endpoint (`POST /api/auth/refresh-token`)~~
+- [x] ~~Brute force protection & Lockout policies~~
+- [ ] Logout endpoint & token revocation
 - [ ] Password reset / change flow
 - [ ] Role system (Owner, Administrator, Technician, Viewer)
 - [ ] User invitation flow

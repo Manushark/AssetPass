@@ -74,21 +74,22 @@ frontend/
 - [x] Create .env.example and configuration system (appsettings, rate limiting, CORS)
 - [ ] Verify database creation from scratch (apply migration to active database)
 
-### PHASE 2 — Authentication & Multi-tenancy
-- [ ] ASP.NET Core Identity setup with PostgreSQL
-- [ ] JWT authentication configuration
-- [ ] Company (Tenant) registration endpoint
-- [ ] User registration (admin user for new company)
-- [ ] Login / Logout endpoints
+### PHASE 2 — Authentication & Multi-tenancy 🔄 (Midpoint Reached - 50%)
+- [x] ASP.NET Core Identity setup with PostgreSQL
+- [x] JWT authentication configuration
+- [x] Company (Tenant) registration endpoint (`POST /api/auth/register`)
+- [x] User registration (admin user / Owner for new company)
+- [x] Login endpoint with JWT + refresh token (`POST /api/auth/login`)
+- [x] Refresh token rotation endpoint (`POST /api/auth/refresh-token`)
+- [x] Brute force protection (Identity lockout policy + IP rate limiting)
+- [ ] Logout endpoint & token revocation
 - [ ] Password recovery flow
 - [ ] Password change
-- [ ] Role system (Owner, Administrator, Technician, Viewer)
+- [ ] Role system (Owner, Administrator, Technician, Viewer permissions)
 - [ ] User management within a company
 - [ ] User invitation system
-- [ ] Tenant isolation middleware
+- [ ] Tenant isolation middleware & cross-tenant access tests
 - [ ] Angular auth module (login, register, guards, interceptors)
-- [ ] Brute force protection
-- [ ] Cross-tenant access tests
 
 ### PHASE 3 — Business Management
 - [ ] Companies module (profile, settings)
