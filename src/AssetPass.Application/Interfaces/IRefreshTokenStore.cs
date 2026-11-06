@@ -17,6 +17,11 @@ public interface IRefreshTokenStore
     Task<string?> ValidateAndGetUserIdAsync(string refreshToken, CancellationToken ct = default);
 
     /// <summary>
+    /// Revokes a specific refresh token (e.g., logging out the current session).
+    /// </summary>
+    Task RevokeTokenAsync(string refreshToken, CancellationToken ct = default);
+
+    /// <summary>
     /// Revokes all active refresh tokens for a user (e.g., on logout or password change).
     /// </summary>
     Task RevokeAllAsync(string identityUserId, CancellationToken ct = default);
