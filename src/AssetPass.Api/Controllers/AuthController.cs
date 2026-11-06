@@ -1,5 +1,6 @@
 using AssetPass.Application.Common;
 using AssetPass.Application.Features.Auth.Commands.Login;
+using AssetPass.Application.Features.Auth.Commands.Logout;
 using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
 using Microsoft.AspNetCore.Authorization;
@@ -19,15 +20,18 @@ public sealed class AuthController : ControllerBase
     private readonly RegisterTenantCommandHandler _registerHandler;
     private readonly LoginCommandHandler _loginHandler;
     private readonly RefreshTokenCommandHandler _refreshHandler;
+    private readonly LogoutCommandHandler _logoutHandler;
 
     public AuthController(
         RegisterTenantCommandHandler registerHandler,
         LoginCommandHandler loginHandler,
-        RefreshTokenCommandHandler refreshHandler)
+        RefreshTokenCommandHandler refreshHandler,
+        LogoutCommandHandler logoutHandler)
     {
         _registerHandler = registerHandler;
         _loginHandler = loginHandler;
         _refreshHandler = refreshHandler;
+        _logoutHandler = logoutHandler;
     }
 
     /// <summary>
@@ -94,6 +98,27 @@ public sealed class AuthController : ControllerBase
             return Unauthorized(ApiResponse.Fail(result.Error!));
 
         return Ok(ApiResponse.Ok(result.Data!));
+    }
+
+    /// <summary>
+    /// Logs out a user and revokes their refresh token(s).
+    /// </summary>
+    [HttpPost("logout")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Logout(
+        [FromBody] LogoutCommand command,
+        CancellationToken ct)
+    {
+        var identityUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        var result = await _logoutHandler.HandleAsync(command, identityUserId, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(ApiResponse.Fail(result.Error!));
+
+        return Ok(ApiResponse.Ok("Sesión cerrada exitosamente."));
     }
 }
 

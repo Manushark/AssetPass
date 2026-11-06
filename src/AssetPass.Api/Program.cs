@@ -3,6 +3,7 @@ using AssetPass.Api.Controllers;
 using AssetPass.Api.Middleware;
 using AssetPass.Api.Services;
 using AssetPass.Application.Features.Auth.Commands.Login;
+using AssetPass.Application.Features.Auth.Commands.Logout;
 using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
 using AssetPass.Application.Interfaces;
@@ -59,6 +60,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<RegisterTenantCommandValida
 builder.Services.AddScoped<RegisterTenantCommandHandler>();
 builder.Services.AddScoped<LoginCommandHandler>();
 builder.Services.AddScoped<RefreshTokenCommandHandler>();
+builder.Services.AddScoped<LogoutCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>

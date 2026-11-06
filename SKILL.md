@@ -121,13 +121,14 @@ These are the planned UX branches from the design system roadmap:
 
 ## Rules for the Agent
 
-1. **ALWAYS** create a `feature/` branch before making code changes.
-2. **ALWAYS** tell the user which branch was created and why.
-3. **NEVER** commit directly to `main` or `develop`.
-4. **ALWAYS** commit 1-2 files maximum per commit — NEVER use `git add .` to stage everything at once.
-5. **ALWAYS** use a descriptive commit message with scope: `type(scope): description`.
-6. When completing a feature, remind the user to merge back to `develop`.
-7. Update `CHANGELOG.md` when the feature is merged.
+1. **DO NOT COMMIT UNTIL EXPLICITLY INSTRUCTED**: Hasta que el usuario no indique explícitamente comitear, NO realizar git commit sobre los cambios de código/documentación. Desarrollar, probar y mantener los cambios en el working tree o en la rama correspondiente, esperando la instrucción directa del usuario para crear los commits.
+2. **ALWAYS** create a `feature/` branch before making code changes.
+3. **ALWAYS** tell the user which branch was created and why.
+4. **NEVER** commit directly to `main` or `develop`.
+5. **ALWAYS** commit 1-2 files maximum per commit — NEVER use `git add .` to stage everything at once.
+6. **ALWAYS** use a descriptive commit message with scope: `type(scope): description`.
+7. When completing a feature, remind the user to merge back to `develop`.
+8. Update `CHANGELOG.md` when the feature is merged.
 
 ### Commit Granularity Guide
 
