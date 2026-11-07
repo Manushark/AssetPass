@@ -25,9 +25,43 @@ public interface IIdentityService
     Task<IdentityUserData?> CheckPasswordAsync(string email, string password, CancellationToken ct = default);
 
     /// <summary>
-    /// Finds an identity user by their email address.
+    /// Finds an identity user by their email address or identity user ID.
     /// </summary>
     Task<IdentityUserData?> FindByEmailAsync(string email, CancellationToken ct = default);
+
+    /// <summary>
+    /// Generates a password reset token for the given email.
+    /// Returns null if the email is not found.
+    /// </summary>
+    Task<string?> GeneratePasswordResetTokenAsync(string email, CancellationToken ct = default);
+
+    /// <summary>
+    /// Resets the user's password using a valid token (from GeneratePasswordResetTokenAsync).
+    /// Returns (success, errors[]).
+    /// </summary>
+    Task<(bool Success, string[] Errors)> ResetPasswordAsync(
+        string email,
+        string token,
+        string newPassword,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Changes the authenticated user's password after verifying the current password.
+    /// Returns (success, errors[]).
+    /// </summary>
+    Task<(bool Success, string[] Errors)> ChangePasswordAsync(
+        string identityUserId,
+        string currentPassword,
+        string newPassword,
+        CancellationToken ct = default);
+    /// <summary>
+    /// Changes the role of an Identity user (removes the old role and assigns the new one).
+    /// </summary>
+    Task ChangeUserRoleAsync(
+        string identityUserId,
+        string oldRole,
+        string newRole,
+        CancellationToken ct = default);
 }
 
 /// <summary>
@@ -42,4 +76,3 @@ public sealed class IdentityUserData
     public Guid ApplicationUserId { get; init; }
     public string Role { get; init; } = string.Empty;
 }
-
