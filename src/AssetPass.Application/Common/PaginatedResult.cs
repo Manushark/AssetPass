@@ -12,4 +12,14 @@ public class PaginatedResult<T>
     public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
     public bool HasPreviousPage => Page > 1;
     public bool HasNextPage => Page < TotalPages;
+
+    public PaginatedResult() { }
+
+    public PaginatedResult(List<T> items, int totalCount, int page, int pageSize)
+    {
+        Items = items;
+        TotalCount = totalCount;
+        Page = page;
+        PageSize = pageSize;
+    }
 }
