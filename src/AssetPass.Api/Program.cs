@@ -2,12 +2,18 @@ using System.Text;
 using AssetPass.Api.Controllers;
 using AssetPass.Api.Middleware;
 using AssetPass.Api.Services;
+using AssetPass.Application.Features.Auth.Commands.ChangePassword;
+using AssetPass.Application.Features.Auth.Commands.ForgotPassword;
 using AssetPass.Application.Features.Auth.Commands.Login;
 using AssetPass.Application.Features.Auth.Commands.Logout;
 using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
+using AssetPass.Application.Features.Auth.Commands.ResetPassword;
+using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
+using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
 using AssetPass.Application.Interfaces;
 using AssetPass.Infrastructure;
+using AssetPass.Infrastructure.Persistence;
 using AspNetCoreRateLimit;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,6 +67,11 @@ builder.Services.AddScoped<RegisterTenantCommandHandler>();
 builder.Services.AddScoped<LoginCommandHandler>();
 builder.Services.AddScoped<RefreshTokenCommandHandler>();
 builder.Services.AddScoped<LogoutCommandHandler>();
+builder.Services.AddScoped<ForgotPasswordCommandHandler>();
+builder.Services.AddScoped<ResetPasswordCommandHandler>();
+builder.Services.AddScoped<ChangePasswordCommandHandler>();
+builder.Services.AddScoped<GetTenantUsersQueryHandler>();
+builder.Services.AddScoped<ChangeUserRoleCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -159,6 +170,21 @@ app.UseCors("AllowAngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Seed roles gracefully if DB is available
+try
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    if (dbContext != null && dbContext.Database.CanConnect())
+    {
+        await RoleSeeder.SeedRolesAsync(app.Services);
+    }
+}
+catch
+{
+    // DB might be offline during initial build or tests
+}
 
 app.Run();
 
