@@ -1,47 +1,55 @@
+using System.Security.Claims;
 using AssetPass.Application.Common;
+using AssetPass.Application.Features.Auth.Commands.ChangePassword;
+using AssetPass.Application.Features.Auth.Commands.ForgotPassword;
 using AssetPass.Application.Features.Auth.Commands.Login;
 using AssetPass.Application.Features.Auth.Commands.Logout;
 using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
+using AssetPass.Application.Features.Auth.Commands.ResetPassword;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetPass.Api.Controllers;
 
 /// <summary>
-/// Handles company registration, login, and token refresh.
-/// All endpoints are anonymous — no [Authorize] required.
+/// Handles authentication, company onboarding, tokens, and password management.
 /// </summary>
 [ApiController]
 [Route("api/auth")]
-[AllowAnonymous]
 public sealed class AuthController : ControllerBase
 {
     private readonly RegisterTenantCommandHandler _registerHandler;
     private readonly LoginCommandHandler _loginHandler;
     private readonly RefreshTokenCommandHandler _refreshHandler;
     private readonly LogoutCommandHandler _logoutHandler;
+    private readonly ForgotPasswordCommandHandler _forgotPasswordHandler;
+    private readonly ResetPasswordCommandHandler _resetPasswordHandler;
+    private readonly ChangePasswordCommandHandler _changePasswordHandler;
 
     public AuthController(
         RegisterTenantCommandHandler registerHandler,
         LoginCommandHandler loginHandler,
         RefreshTokenCommandHandler refreshHandler,
-        LogoutCommandHandler logoutHandler)
+        LogoutCommandHandler logoutHandler,
+        ForgotPasswordCommandHandler forgotPasswordHandler,
+        ResetPasswordCommandHandler resetPasswordHandler,
+        ChangePasswordCommandHandler changePasswordHandler)
     {
         _registerHandler = registerHandler;
         _loginHandler = loginHandler;
         _refreshHandler = refreshHandler;
         _logoutHandler = logoutHandler;
+        _forgotPasswordHandler = forgotPasswordHandler;
+        _resetPasswordHandler = resetPasswordHandler;
+        _changePasswordHandler = changePasswordHandler;
     }
 
     /// <summary>
     /// Registers a new company (tenant) and its first admin user (Owner role).
     /// </summary>
-    /// <remarks>
-    /// Creates a new isolated tenant context. The supplied admin credentials
-    /// become the Owner of the new company. A 14-day trial subscription is started.
-    /// </remarks>
     [HttpPost("register")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
@@ -67,6 +75,7 @@ public sealed class AuthController : ControllerBase
     /// Authenticates a user and returns JWT access and refresh tokens.
     /// </summary>
     [HttpPost("login")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login(
@@ -86,6 +95,7 @@ public sealed class AuthController : ControllerBase
     /// The submitted refresh token is revoked immediately (rotation pattern).
     /// </summary>
     [HttpPost("refresh-token")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> RefreshToken(
@@ -104,13 +114,14 @@ public sealed class AuthController : ControllerBase
     /// Logs out a user and revokes their refresh token(s).
     /// </summary>
     [HttpPost("logout")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Logout(
         [FromBody] LogoutCommand command,
         CancellationToken ct)
     {
-        var identityUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+        var identityUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("sub")?.Value;
 
         var result = await _logoutHandler.HandleAsync(command, identityUserId, ct);
@@ -119,6 +130,70 @@ public sealed class AuthController : ControllerBase
             return BadRequest(ApiResponse.Fail(result.Error!));
 
         return Ok(ApiResponse.Ok("Sesión cerrada exitosamente."));
+    }
+
+    /// <summary>
+    /// Requests a password reset link/token. Always returns success to prevent user enumeration.
+    /// </summary>
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ForgotPassword(
+        [FromBody] ForgotPasswordCommand command,
+        CancellationToken ct)
+    {
+        var result = await _forgotPasswordHandler.HandleAsync(command, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors));
+
+        return Ok(ApiResponse.Ok("Si el correo electrónico existe en nuestra plataforma, recibirás instrucciones para restablecer tu contraseña."));
+    }
+
+    /// <summary>
+    /// Resets user password using the token sent via email.
+    /// </summary>
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword(
+        [FromBody] ResetPasswordCommand command,
+        CancellationToken ct)
+    {
+        var result = await _resetPasswordHandler.HandleAsync(command, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors));
+
+        return Ok(ApiResponse.Ok("Contraseña restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña."));
+    }
+
+    /// <summary>
+    /// Changes the password for the currently authenticated user.
+    /// </summary>
+    [HttpPost("change-password")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ChangePassword(
+        [FromBody] ChangePasswordCommand command,
+        CancellationToken ct)
+    {
+        var identityUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(identityUserId))
+            return Unauthorized(ApiResponse.Fail("Usuario no autenticado."));
+
+        var result = await _changePasswordHandler.HandleAsync(command, identityUserId, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors));
+
+        return Ok(ApiResponse.Ok("Contraseña modificada exitosamente. Todas las sesiones han sido cerradas por seguridad."));
     }
 }
 
@@ -143,4 +218,3 @@ public static class ApiResponse
     public static ApiResponse<object> Fail(string error, IReadOnlyList<string>? validationErrors = null) =>
         new() { Success = false, Error = error, ValidationErrors = validationErrors ?? [] };
 }
-

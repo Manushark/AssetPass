@@ -34,7 +34,7 @@ public sealed class IdentityService : IIdentityService
         {
             UserName = email,
             Email = email,
-            EmailConfirmed = true, // auto-confirm until email verification is implemented
+            EmailConfirmed = true,
             TenantId = tenantId,
             ApplicationUserId = applicationUserId
         };
@@ -46,7 +46,6 @@ public sealed class IdentityService : IIdentityService
             return (null, errors);
         }
 
-        // Assign role — role must exist in the database (seeded via EF migration or startup)
         await _userManager.AddToRoleAsync(user, role);
 
         return (user.Id, []);
@@ -62,7 +61,6 @@ public sealed class IdentityService : IIdentityService
         if (user is null)
             return null;
 
-        // Use CheckPasswordSignInAsync to benefit from lockout tracking
         var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
         if (!result.Succeeded)
             return null;
@@ -83,7 +81,6 @@ public sealed class IdentityService : IIdentityService
     /// <inheritdoc />
     public async Task<IdentityUserData?> FindByEmailAsync(string email, CancellationToken ct = default)
     {
-        // Also support lookup by identity user ID (used by RefreshTokenHandler)
         AppIdentityUser? user;
         if (Guid.TryParse(email, out _) || (!email.Contains('@') && email.Length > 20))
             user = await _userManager.FindByIdAsync(email);
@@ -104,5 +101,66 @@ public sealed class IdentityService : IIdentityService
             Role = roles.FirstOrDefault() ?? string.Empty
         };
     }
-}
 
+    /// <inheritdoc />
+    public async Task<string?> GeneratePasswordResetTokenAsync(string email, CancellationToken ct = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            return null;
+
+        return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
+
+    /// <inheritdoc />
+    public async Task<(bool Success, string[] Errors)> ResetPasswordAsync(
+        string email,
+        string token,
+        string newPassword,
+        CancellationToken ct = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            return (false, ["Token de restablecimiento inválido o expirado."]);
+
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        if (!result.Succeeded)
+            return (false, result.Errors.Select(e => e.Description).ToArray());
+
+        return (true, []);
+    }
+
+    /// <inheritdoc />
+    public async Task<(bool Success, string[] Errors)> ChangePasswordAsync(
+        string identityUserId,
+        string currentPassword,
+        string newPassword,
+        CancellationToken ct = default)
+    {
+        var user = await _userManager.FindByIdAsync(identityUserId);
+        if (user is null)
+            return (false, ["Usuario no encontrado."]);
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        if (!result.Succeeded)
+            return (false, result.Errors.Select(e => e.Description).ToArray());
+
+        return (true, []);
+    }
+
+    /// <inheritdoc />
+    public async Task ChangeUserRoleAsync(
+        string identityUserId,
+        string oldRole,
+        string newRole,
+        CancellationToken ct = default)
+    {
+        var user = await _userManager.FindByIdAsync(identityUserId);
+        if (user is null) return;
+
+        if (await _userManager.IsInRoleAsync(user, oldRole))
+            await _userManager.RemoveFromRoleAsync(user, oldRole);
+
+        await _userManager.AddToRoleAsync(user, newRole);
+    }
+}
