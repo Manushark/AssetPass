@@ -1,5 +1,6 @@
 using AssetPass.Application.Common;
 using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
+using AssetPass.Application.Features.Users.Commands.InviteUser;
 using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
 using AssetPass.Application.Interfaces;
 using AssetPass.Domain.Enums;
@@ -19,15 +20,18 @@ public sealed class UsersController : ControllerBase
 {
     private readonly GetTenantUsersQueryHandler _getUsersHandler;
     private readonly ChangeUserRoleCommandHandler _changeRoleHandler;
+    private readonly InviteUserCommandHandler _inviteUserHandler;
     private readonly ITenantContext _tenantContext;
 
     public UsersController(
         GetTenantUsersQueryHandler getUsersHandler,
         ChangeUserRoleCommandHandler changeRoleHandler,
+        InviteUserCommandHandler inviteUserHandler,
         ITenantContext tenantContext)
     {
         _getUsersHandler = getUsersHandler;
         _changeRoleHandler = changeRoleHandler;
+        _inviteUserHandler = inviteUserHandler;
         _tenantContext = tenantContext;
     }
 
@@ -93,6 +97,41 @@ public sealed class UsersController : ControllerBase
         }
 
         return Ok(ApiResponse.Ok($"Rol actualizado a '{newRole}' exitosamente."));
+    }
+
+    /// <summary>
+    /// Invites a new user to the authenticated tenant.
+    /// Accessible by Owner and Administrator.
+    /// </summary>
+    [HttpPost("invite")]
+    [Authorize(Roles = "Owner,Administrator")]
+    [ProducesResponseType(typeof(ApiResponse<InviteUserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> InviteUser(
+        [FromBody] InviteUserCommand command,
+        CancellationToken ct)
+    {
+        if (!Enum.TryParse<UserRole>(_tenantContext.UserRole, ignoreCase: true, out var callerRole))
+            return Forbid();
+
+        var result = await _inviteUserHandler.HandleAsync(
+            command,
+            callerTenantId: _tenantContext.TenantId,
+            callerApplicationUserId: _tenantContext.UserId,
+            callerRole: callerRole,
+            ct: ct);
+
+        if (!result.IsSuccess)
+        {
+            return result.ErrorCode switch
+            {
+                "FORBIDDEN" => StatusCode(StatusCodes.Status403Forbidden, ApiResponse.Fail(result.Error!)),
+                _ => BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors))
+            };
+        }
+
+        return Ok(ApiResponse.Ok(result.Data!));
     }
 }
 

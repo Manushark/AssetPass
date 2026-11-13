@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AssetPass.Application.Common;
+using AssetPass.Application.Features.Auth.Commands.AcceptInvitation;
 using AssetPass.Application.Features.Auth.Commands.ChangePassword;
 using AssetPass.Application.Features.Auth.Commands.ForgotPassword;
 using AssetPass.Application.Features.Auth.Commands.Login;
@@ -26,6 +27,7 @@ public sealed class AuthController : ControllerBase
     private readonly ForgotPasswordCommandHandler _forgotPasswordHandler;
     private readonly ResetPasswordCommandHandler _resetPasswordHandler;
     private readonly ChangePasswordCommandHandler _changePasswordHandler;
+    private readonly AcceptInvitationCommandHandler _acceptInvitationHandler;
 
     public AuthController(
         RegisterTenantCommandHandler registerHandler,
@@ -34,7 +36,8 @@ public sealed class AuthController : ControllerBase
         LogoutCommandHandler logoutHandler,
         ForgotPasswordCommandHandler forgotPasswordHandler,
         ResetPasswordCommandHandler resetPasswordHandler,
-        ChangePasswordCommandHandler changePasswordHandler)
+        ChangePasswordCommandHandler changePasswordHandler,
+        AcceptInvitationCommandHandler acceptInvitationHandler)
     {
         _registerHandler = registerHandler;
         _loginHandler = loginHandler;
@@ -43,6 +46,7 @@ public sealed class AuthController : ControllerBase
         _forgotPasswordHandler = forgotPasswordHandler;
         _resetPasswordHandler = resetPasswordHandler;
         _changePasswordHandler = changePasswordHandler;
+        _acceptInvitationHandler = acceptInvitationHandler;
     }
 
     /// <summary>
@@ -194,6 +198,25 @@ public sealed class AuthController : ControllerBase
             return BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors));
 
         return Ok(ApiResponse.Ok("Contraseña modificada exitosamente. Todas las sesiones han sido cerradas por seguridad."));
+    }
+
+    /// <summary>
+    /// Accepts a user invitation using a secure token and sets up user credentials.
+    /// </summary>
+    [HttpPost("accept-invitation")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AcceptInvitation(
+        [FromBody] AcceptInvitationCommand command,
+        CancellationToken ct)
+    {
+        var result = await _acceptInvitationHandler.HandleAsync(command, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(ApiResponse.Fail(result.Error!, result.ValidationErrors));
+
+        return Ok(ApiResponse.Ok("Invitación aceptada exitosamente. Ya puedes iniciar sesión con tu cuenta."));
     }
 }
 
