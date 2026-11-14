@@ -74,7 +74,7 @@ frontend/
 - [x] Create .env.example and configuration system (appsettings, rate limiting, CORS)
 - [ ] Verify database creation from scratch (apply migration to active database)
 
-### PHASE 2 — Authentication & Multi-tenancy 🔄 (Midpoint Reached - 50%)
+### PHASE 2 — Authentication & Multi-tenancy 🔄 (75% Reached)
 - [x] ASP.NET Core Identity setup with PostgreSQL
 - [x] JWT authentication configuration
 - [x] Company (Tenant) registration endpoint (`POST /api/auth/register`)
@@ -83,9 +83,9 @@ frontend/
 - [x] Refresh token rotation endpoint (`POST /api/auth/refresh-token`)
 - [x] Brute force protection (Identity lockout policy + IP rate limiting)
 - [x] Logout endpoint & token revocation (`POST /api/auth/logout`)
-- [ ] Password recovery flow
-- [ ] Password change
-- [ ] Role system (Owner, Administrator, Technician, Viewer permissions)
+- [x] Password recovery flow (`POST /api/auth/forgot-password` & `POST /api/auth/reset-password`)
+- [x] Password change (`POST /api/auth/change-password`)
+- [x] Role system (Owner, Administrator, Technician, Viewer permissions & `PATCH /api/users/{userId}/role`)
 - [ ] User management within a company
 - [ ] User invitation system
 - [ ] Tenant isolation middleware & cross-tenant access tests

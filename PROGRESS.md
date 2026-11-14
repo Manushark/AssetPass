@@ -1,6 +1,6 @@
 # AssetPass — Progress Report
 
-## Overall Status: Phase 2 — Authentication & Multi-tenancy (Midpoint Reached - 50%) 🔄
+## Overall Status: Phase 2 — Authentication & Multi-tenancy (75% Completed) 🔄
 
 ### Phase 0 — Research & Planning ✅ Completed
 - [x] ~~Environment inspection~~
@@ -24,15 +24,15 @@
 
 ---
 
-### Phase 2 — Authentication & Multi-tenancy 🔄 Midpoint Reached (50%)
+### Phase 2 — Authentication & Multi-tenancy 🔄 Advanced (75%)
 - [x] ~~Company (Tenant) registration endpoint (`POST /api/auth/register`)~~
 - [x] ~~User registration (admin / Owner for new tenant)~~
 - [x] ~~Login endpoint with JWT + refresh token (`POST /api/auth/login`)~~
 - [x] ~~Refresh token rotation endpoint (`POST /api/auth/refresh-token`)~~
 - [x] ~~Brute force protection & Lockout policies~~
 - [x] ~~Logout endpoint & token revocation (`POST /api/auth/logout`)~~
-- [ ] Password reset / change flow
-- [ ] Role system (Owner, Administrator, Technician, Viewer)
+- [x] ~~Password reset / change flow (`POST /api/auth/forgot-password`, `reset-password`, `change-password`)~~
+- [x] ~~Role system (Owner, Administrator, Technician, Viewer seeding, query & role change guards)~~
 - [ ] User invitation flow
 - [ ] Tenant context validation & cross-tenant access tests
 - [ ] Angular auth module (login, register, auth guard, JWT interceptor)
