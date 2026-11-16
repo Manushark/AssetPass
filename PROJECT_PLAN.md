@@ -86,9 +86,9 @@ frontend/
 - [x] Password recovery flow (`POST /api/auth/forgot-password` & `POST /api/auth/reset-password`)
 - [x] Password change (`POST /api/auth/change-password`)
 - [x] Role system (Owner, Administrator, Technician, Viewer permissions & `PATCH /api/users/{userId}/role`)
-- [ ] User management within a company
-- [ ] User invitation system
-- [ ] Tenant isolation middleware & cross-tenant access tests
+- [x] User management within a company (`GET /api/users`)
+- [x] User invitation system (`POST /api/users/invite` & `POST /api/auth/accept-invitation`)
+- [x] Tenant isolation middleware & cross-tenant access tests
 - [ ] Angular auth module (login, register, guards, interceptors)
 
 ### PHASE 3 — Business Management

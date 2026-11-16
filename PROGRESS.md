@@ -24,7 +24,7 @@
 
 ---
 
-### Phase 2 — Authentication & Multi-tenancy 🔄 Advanced (75%)
+### Phase 2 — Authentication & Multi-tenancy 🔄 Advanced (90%)
 - [x] ~~Company (Tenant) registration endpoint (`POST /api/auth/register`)~~
 - [x] ~~User registration (admin / Owner for new tenant)~~
 - [x] ~~Login endpoint with JWT + refresh token (`POST /api/auth/login`)~~
@@ -33,8 +33,8 @@
 - [x] ~~Logout endpoint & token revocation (`POST /api/auth/logout`)~~
 - [x] ~~Password reset / change flow (`POST /api/auth/forgot-password`, `reset-password`, `change-password`)~~
 - [x] ~~Role system (Owner, Administrator, Technician, Viewer seeding, query & role change guards)~~
-- [ ] User invitation flow
-- [ ] Tenant context validation & cross-tenant access tests
+- [x] ~~User invitation flow (`POST /api/users/invite` & `POST /api/auth/accept-invitation`)~~
+- [x] ~~Tenant context validation & cross-tenant access tests (`HttpTenantContext` unit tests & isolation guards)~~
 - [ ] Angular auth module (login, register, auth guard, JWT interceptor)
 
 ### Phase 3 — Business Management ⏳ Pending
@@ -88,7 +88,7 @@
 | Domain Enums | 8 | ✅ Complete |
 | API Endpoints | 0 | ⏳ Phase 2 |
 | Angular Components | 1 | 🔄 Scaffolded & Passing |
-| Backend Unit Tests | 4 | ✅ Passing (All 4 projects) |
+| Backend Unit Tests | 34 | ✅ Passing (All 4 projects) |
 | Frontend Unit Tests | 2 | ✅ Passing (Vitest) |
 | EF Core Migrations | 1 | ✅ InitialCreate Generated |
 

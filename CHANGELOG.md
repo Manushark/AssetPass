@@ -20,8 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `RoleSeeder`: Automatic initialization of `Owner`, `Administrator`, `Technician`, and `Viewer` roles.
   - `GET /api/users`: Tenant-scoped paginated user query with multi-field search.
   - `PATCH /api/users/{userId}/role`: Role change endpoint with self-modification and privilege escalation guards.
+- **User Invitation System**:
+  - `POST /api/users/invite`: Owner and Administrator can invite members to their company with specific roles (excluding Owner). Generates secure cryptographic tokens and sends invitation email.
+  - `POST /api/auth/accept-invitation`: Unauthenticated endpoint to accept invitation tokens and set account passwords.
+  - Command handlers with FluentValidation: `InviteUserCommandHandler` and `AcceptInvitationCommandHandler`.
 - **Testing**:
   - Unit test suite for password reset, forgot password, and change password flows.
   - Unit test suite for tenant user role change authorization guards.
+  - Unit test suite for `InviteUserCommandHandler` and `AcceptInvitationCommandHandler`.
+  - Unit test suite for `HttpTenantContext` claim extraction and isolation defaults.
   - Unit test suite for `InMemoryRefreshTokenStore` lifecycle and token cleanup.
   - Unit test suite for `ApiResponse` envelope contract.
+
