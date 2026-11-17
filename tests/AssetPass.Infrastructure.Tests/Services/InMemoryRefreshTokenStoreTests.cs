@@ -63,3 +63,4 @@ public class InMemoryRefreshTokenStoreTests
         Assert.NotNull(await store.ValidateAndGetUserIdAsync("tok-3"));
     }
 }
+
