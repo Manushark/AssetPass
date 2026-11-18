@@ -91,3 +91,28 @@ Content-Type: application/json
 {
   "role": "Technician"
 }
+
+### 10. Invite User (Owner / Admin)
+POST {{AssetPass.Api_HostAddress}}/api/users/invite
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "email": "tecnico@empresa.com",
+  "role": "Technician",
+  "firstName": "Juan",
+  "lastName": "Pérez"
+}
+
+### 11. Accept Invitation (Anonymous)
+POST {{AssetPass.Api_HostAddress}}/api/auth/accept-invitation
+Content-Type: application/json
+
+{
+  "token": "REPLACE_WITH_INVITATION_TOKEN",
+  "password": "Password123!",
+  "confirmPassword": "Password123!",
+  "firstName": "Juan",
+  "lastName": "Pérez"
+}
+

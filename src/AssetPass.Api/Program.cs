@@ -2,6 +2,7 @@ using System.Text;
 using AssetPass.Api.Controllers;
 using AssetPass.Api.Middleware;
 using AssetPass.Api.Services;
+using AssetPass.Application.Features.Auth.Commands.AcceptInvitation;
 using AssetPass.Application.Features.Auth.Commands.ChangePassword;
 using AssetPass.Application.Features.Auth.Commands.ForgotPassword;
 using AssetPass.Application.Features.Auth.Commands.Login;
@@ -10,6 +11,7 @@ using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
 using AssetPass.Application.Features.Auth.Commands.ResetPassword;
 using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
+using AssetPass.Application.Features.Users.Commands.InviteUser;
 using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
 using AssetPass.Application.Interfaces;
 using AssetPass.Infrastructure;
@@ -72,6 +74,8 @@ builder.Services.AddScoped<ResetPasswordCommandHandler>();
 builder.Services.AddScoped<ChangePasswordCommandHandler>();
 builder.Services.AddScoped<GetTenantUsersQueryHandler>();
 builder.Services.AddScoped<ChangeUserRoleCommandHandler>();
+builder.Services.AddScoped<InviteUserCommandHandler>();
+builder.Services.AddScoped<AcceptInvitationCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>
