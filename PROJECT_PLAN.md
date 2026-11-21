@@ -89,7 +89,7 @@ frontend/
 - [x] User management within a company (`GET /api/users`)
 - [x] User invitation system (`POST /api/users/invite` & `POST /api/auth/accept-invitation`)
 - [x] Tenant isolation middleware & cross-tenant access tests
-- [ ] Angular auth module (login, register, guards, interceptors)
+- [x] Angular auth module (login, register, guards, interceptors)
 
 ### PHASE 3 — Business Management
 - [ ] Companies module (profile, settings)
