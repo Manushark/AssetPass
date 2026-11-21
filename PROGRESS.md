@@ -24,7 +24,7 @@
 
 ---
 
-### Phase 2 — Authentication & Multi-tenancy 🔄 Advanced (90%)
+### Phase 2 — Authentication & Multi-tenancy ✅ Complete (100%)
 - [x] ~~Company (Tenant) registration endpoint (`POST /api/auth/register`)~~
 - [x] ~~User registration (admin / Owner for new tenant)~~
 - [x] ~~Login endpoint with JWT + refresh token (`POST /api/auth/login`)~~
@@ -35,7 +35,7 @@
 - [x] ~~Role system (Owner, Administrator, Technician, Viewer seeding, query & role change guards)~~
 - [x] ~~User invitation flow (`POST /api/users/invite` & `POST /api/auth/accept-invitation`)~~
 - [x] ~~Tenant context validation & cross-tenant access tests (`HttpTenantContext` unit tests & isolation guards)~~
-- [ ] Angular auth module (login, register, auth guard, JWT interceptor)
+- [x] ~~Angular auth module (login, register, forgot-password, auth guard, JWT interceptor)~~
 
 ### Phase 3 — Business Management ⏳ Pending
 - [ ] Companies module (profile, settings)
@@ -89,7 +89,7 @@
 | API Endpoints | 0 | ⏳ Phase 2 |
 | Angular Components | 1 | 🔄 Scaffolded & Passing |
 | Backend Unit Tests | 34 | ✅ Passing (All 4 projects) |
-| Frontend Unit Tests | 2 | ✅ Passing (Vitest) |
+| Frontend Unit Tests | 10 | ✅ Passing (Vitest) |
 | EF Core Migrations | 1 | ✅ InitialCreate Generated |
 
 _Last updated: 2026-10-31_
