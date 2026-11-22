@@ -1,6 +1,118 @@
-@AssetPass.Api_HostAddress = http://localhost:5098
+@AssetPass.Api_HostAddress = http://localhost:5000
 
-GET {{AssetPass.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Register Tenant (Company Onboarding)
+POST {{AssetPass.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
 
-###
+{
+  "commercialName": "ClimaTech Dominicana SRL",
+  "legalName": "ClimaTech Dominicana SRL",
+  "rnc": "131234567",
+  "phone": "8095551234",
+  "companyEmail": "contacto@climatech.do",
+  "address": "Av. 27 de Febrero #100, Santo Domingo",
+  "currency": "DOP",
+  "timeZone": "America/Santo_Domingo",
+  "adminFirstName": "Carlos",
+  "adminLastName": "Mendoza",
+  "adminEmail": "admin@climatech.do",
+  "adminPassword": "Password123!",
+  "adminPasswordConfirm": "Password123!"
+}
+
+### 2. Login
+# @name login
+POST {{AssetPass.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@climatech.do",
+  "password": "Password123!"
+}
+
+### 3. Refresh Token
+@refreshToken = {{login.response.body.data.refreshToken}}
+POST {{AssetPass.Api_HostAddress}}/api/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 4. Logout
+POST {{AssetPass.Api_HostAddress}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}",
+  "revokeAllSessions": false
+}
+
+### 5. Forgot Password
+POST {{AssetPass.Api_HostAddress}}/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "admin@climatech.do"
+}
+
+### 6. Reset Password
+POST {{AssetPass.Api_HostAddress}}/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "admin@climatech.do",
+  "token": "sample-reset-token",
+  "newPassword": "NewPassword123!",
+  "newPasswordConfirm": "NewPassword123!"
+}
+
+### 7. Change Password (Authenticated)
+@authToken = {{login.response.body.data.accessToken}}
+POST {{AssetPass.Api_HostAddress}}/api/auth/change-password
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password123!",
+  "newPassword": "NewPassword123!",
+  "newPasswordConfirm": "NewPassword123!"
+}
+
+### 8. Get Tenant Users (Owner / Admin)
+GET {{AssetPass.Api_HostAddress}}/api/users?page=1&pageSize=10
+Authorization: Bearer {{authToken}}
+
+### 9. Change User Role (Owner / Admin)
+PATCH {{AssetPass.Api_HostAddress}}/api/users/00000000-0000-0000-0000-000000000000/role
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "role": "Technician"
+}
+
+### 10. Invite User (Owner / Admin)
+POST {{AssetPass.Api_HostAddress}}/api/users/invite
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "email": "tecnico@empresa.com",
+  "role": "Technician",
+  "firstName": "Juan",
+  "lastName": "Pérez"
+}
+
+### 11. Accept Invitation (Anonymous)
+POST {{AssetPass.Api_HostAddress}}/api/auth/accept-invitation
+Content-Type: application/json
+
+{
+  "token": "REPLACE_WITH_INVITATION_TOKEN",
+  "password": "Password123!",
+  "confirmPassword": "Password123!",
+  "firstName": "Juan",
+  "lastName": "Pérez"
+}
+

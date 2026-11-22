@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: assetpass-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-assetpass}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_dev_password_change_in_prod}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-assetpass}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - assetpass-network
+
+  api:
+    build:
+      context: .
+      dockerfile: src/AssetPass.Api/Dockerfile
+    container_name: assetpass-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB:-assetpass};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres_dev_password_change_in_prod}
+      - Jwt__Key=${JWT_KEY:-SuperSecretDevKeyAssetPass2026MustBeAtLeast32BytesLong!}
+      - Jwt__Issuer=${JWT_ISSUER:-AssetPassAPI}
+      - Jwt__Audience=${JWT_AUDIENCE:-AssetPassApp}
+      - Jwt__ExpirationMinutes=${JWT_EXPIRATION_MINUTES:-60}
+      - Cors__AllowedOrigins__0=http://localhost:4200
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - api_uploads:/app/uploads
+    networks:
+      - assetpass-network
+
+volumes:
+  postgres_data:
+  api_uploads:
+
+networks:
+  assetpass-network:
+    driver: bridge

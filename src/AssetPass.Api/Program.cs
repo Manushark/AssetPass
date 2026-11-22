@@ -1,10 +1,23 @@
 using System.Text;
+using AssetPass.Api.Controllers;
 using AssetPass.Api.Middleware;
 using AssetPass.Api.Services;
+using AssetPass.Application.Features.Auth.Commands.AcceptInvitation;
+using AssetPass.Application.Features.Auth.Commands.ChangePassword;
+using AssetPass.Application.Features.Auth.Commands.ForgotPassword;
+using AssetPass.Application.Features.Auth.Commands.Login;
+using AssetPass.Application.Features.Auth.Commands.Logout;
+using AssetPass.Application.Features.Auth.Commands.RefreshToken;
+using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
+using AssetPass.Application.Features.Auth.Commands.ResetPassword;
+using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
+using AssetPass.Application.Features.Users.Commands.InviteUser;
+using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
 using AssetPass.Application.Interfaces;
 using AssetPass.Infrastructure;
-using AssetPass.Infrastructure.Identity;
+using AssetPass.Infrastructure.Persistence;
 using AspNetCoreRateLimit;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -15,14 +28,14 @@ var builder = WebApplication.CreateBuilder(args);
 // SERVICES
 // ============================================================
 
-// Infrastructure (Database, Identity, File Storage, Email)
+// Infrastructure (Database, Identity, File Storage, Email, JWT, Refresh Tokens)
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Tenant Context (derived from JWT claims)
+// Tenant Context (derived from JWT claims — TenantId never comes from the client body)
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 
-// JWT Authentication
+// JWT Authentication middleware
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var jwtKey = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key not configured. Set Jwt:Key in configuration.");
 
@@ -48,8 +61,21 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// JWT Token Service
-builder.Services.AddScoped<JwtTokenService>();
+// FluentValidation validators (registered from Application assembly)
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterTenantCommandValidator>();
+
+// Application command handlers (direct injection, no MediatR)
+builder.Services.AddScoped<RegisterTenantCommandHandler>();
+builder.Services.AddScoped<LoginCommandHandler>();
+builder.Services.AddScoped<RefreshTokenCommandHandler>();
+builder.Services.AddScoped<LogoutCommandHandler>();
+builder.Services.AddScoped<ForgotPasswordCommandHandler>();
+builder.Services.AddScoped<ResetPasswordCommandHandler>();
+builder.Services.AddScoped<ChangePasswordCommandHandler>();
+builder.Services.AddScoped<GetTenantUsersQueryHandler>();
+builder.Services.AddScoped<ChangeUserRoleCommandHandler>();
+builder.Services.AddScoped<InviteUserCommandHandler>();
+builder.Services.AddScoped<AcceptInvitationCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -148,6 +174,21 @@ app.UseCors("AllowAngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Seed roles gracefully if DB is available
+try
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+    if (dbContext != null && dbContext.Database.CanConnect())
+    {
+        await RoleSeeder.SeedRolesAsync(app.Services);
+    }
+}
+catch
+{
+    // DB might be offline during initial build or tests
+}
 
 app.Run();
 

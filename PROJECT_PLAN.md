@@ -61,34 +61,35 @@ frontend/
 - [x] Identify risks
 - [x] Create initial documentation
 
-### PHASE 1 — Foundation
-- [ ] Initialize Git repository
-- [ ] Create .NET solution structure (Clean Architecture)
-- [ ] Create Angular project
-- [ ] Configure Docker & Docker Compose
-- [ ] Set up PostgreSQL container
-- [ ] Create Domain entities (core models)
-- [ ] Create DbContext with tenant isolation
-- [ ] Create initial EF Core migration
-- [ ] Configure Swagger/OpenAPI
-- [ ] Create .env.example and configuration system
-- [ ] Verify database creation from scratch
+### PHASE 1 — Foundation 🔄 (In Progress)
+- [x] Initialize Git repository (GitHub remote, GitFlow main/develop, granular commits)
+- [x] Create .NET solution structure (Clean Architecture: Domain, Application, Infrastructure, Api)
+- [x] Create Angular project (Angular 21 SPA, TypeScript strict, Vitest)
+- [x] Configure Docker & Docker Compose (docker-compose.yml, multi-stage Dockerfile)
+- [ ] Set up PostgreSQL container (running database instance)
+- [x] Create Domain entities (core models, enums, BaseEntity)
+- [x] Create DbContext with tenant isolation (ApplicationDbContext with query filters)
+- [x] Create initial EF Core migration (InitialCreate generated)
+- [x] Configure Swagger/OpenAPI (Swashbuckle 6.6.2 with JWT Bearer security scheme)
+- [x] Create .env.example and configuration system (appsettings, rate limiting, CORS)
+- [ ] Verify database creation from scratch (apply migration to active database)
 
-### PHASE 2 — Authentication & Multi-tenancy
-- [ ] ASP.NET Core Identity setup with PostgreSQL
-- [ ] JWT authentication configuration
-- [ ] Company (Tenant) registration endpoint
-- [ ] User registration (admin user for new company)
-- [ ] Login / Logout endpoints
-- [ ] Password recovery flow
-- [ ] Password change
-- [ ] Role system (Owner, Administrator, Technician, Viewer)
-- [ ] User management within a company
-- [ ] User invitation system
-- [ ] Tenant isolation middleware
-- [ ] Angular auth module (login, register, guards, interceptors)
-- [ ] Brute force protection
-- [ ] Cross-tenant access tests
+### PHASE 2 — Authentication & Multi-tenancy 🔄 (75% Reached)
+- [x] ASP.NET Core Identity setup with PostgreSQL
+- [x] JWT authentication configuration
+- [x] Company (Tenant) registration endpoint (`POST /api/auth/register`)
+- [x] User registration (admin user / Owner for new company)
+- [x] Login endpoint with JWT + refresh token (`POST /api/auth/login`)
+- [x] Refresh token rotation endpoint (`POST /api/auth/refresh-token`)
+- [x] Brute force protection (Identity lockout policy + IP rate limiting)
+- [x] Logout endpoint & token revocation (`POST /api/auth/logout`)
+- [x] Password recovery flow (`POST /api/auth/forgot-password` & `POST /api/auth/reset-password`)
+- [x] Password change (`POST /api/auth/change-password`)
+- [x] Role system (Owner, Administrator, Technician, Viewer permissions & `PATCH /api/users/{userId}/role`)
+- [x] User management within a company (`GET /api/users`)
+- [x] User invitation system (`POST /api/users/invite` & `POST /api/auth/accept-invitation`)
+- [x] Tenant isolation middleware & cross-tenant access tests
+- [x] Angular auth module (login, register, guards, interceptors)
 
 ### PHASE 3 — Business Management
 - [ ] Companies module (profile, settings)
