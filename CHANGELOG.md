@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0-beta.1] - 2026-11-25
+
 ### Added
 - **Authentication & User Management**:
   - `POST /api/auth/register`: Multi-tenant company onboarding with initial Owner user.
