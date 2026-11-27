@@ -192,4 +192,50 @@ Content-Type: application/json
 DELETE {{AssetPass.Api_HostAddress}}/api/clients/00000000-0000-0000-0000-000000000000
 Authorization: Bearer {{authToken}}
 
+### 20. List Establishments (Paginated & Filtered)
+GET {{AssetPass.Api_HostAddress}}/api/establishments?page=1&pageSize=10
+Authorization: Bearer {{authToken}}
+
+### 21. List Establishments by Client
+GET {{AssetPass.Api_HostAddress}}/api/establishments?clientId=00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### 22. Get Establishment by ID
+GET {{AssetPass.Api_HostAddress}}/api/establishments/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### 23. Create Establishment
+POST {{AssetPass.Api_HostAddress}}/api/establishments
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "clientId": "00000000-0000-0000-0000-000000000000",
+  "name": "Sede Principal Santiago",
+  "address": "Av. Juan Pablo Duarte Km 2.5, Santiago",
+  "phone": "+1-809-580-0000",
+  "contactPerson": "Ing. Miguel Martínez",
+  "notes": "Horario operativo: L-V 8:00 AM - 6:00 PM"
+}
+
+### 24. Update Establishment
+PUT {{AssetPass.Api_HostAddress}}/api/establishments/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "clientId": "00000000-0000-0000-0000-000000000000",
+  "name": "Sede Principal Santiago (Remodelada)",
+  "address": "Av. Juan Pablo Duarte Km 2.5, Santiago",
+  "phone": "+1-809-580-1111",
+  "contactPerson": "Ing. Miguel Martínez",
+  "notes": "Acceso por puerta este",
+  "isActive": true
+}
+
+### 25. Delete Establishment (Soft Delete)
+DELETE {{AssetPass.Api_HostAddress}}/api/establishments/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+
 

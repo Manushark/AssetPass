@@ -94,7 +94,7 @@ frontend/
 ### PHASE 3 — Business Management
 - [x] Companies module (profile, settings)
 - [x] Clients CRUD + search/filter/pagination
-- [ ] Establishments CRUD
+- [x] Establishments CRUD
 - [ ] Equipment CRUD with categories
 - [ ] Equipment categories (configurable)
 - [ ] Equipment states management

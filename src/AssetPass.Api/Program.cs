@@ -18,6 +18,11 @@ using AssetPass.Application.Features.Clients.Queries.GetClients;
 using AssetPass.Application.Features.Company.Commands.UpdateCompanyProfile;
 using AssetPass.Application.Features.Company.Commands.UpdatePublicPortalSettings;
 using AssetPass.Application.Features.Company.Queries.GetCompanyProfile;
+using AssetPass.Application.Features.Establishments.Commands.CreateEstablishment;
+using AssetPass.Application.Features.Establishments.Commands.DeleteEstablishment;
+using AssetPass.Application.Features.Establishments.Commands.UpdateEstablishment;
+using AssetPass.Application.Features.Establishments.Queries.GetEstablishmentById;
+using AssetPass.Application.Features.Establishments.Queries.GetEstablishments;
 using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
 using AssetPass.Application.Features.Users.Commands.InviteUser;
 using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
@@ -92,6 +97,11 @@ builder.Services.AddScoped<GetClientByIdQueryHandler>();
 builder.Services.AddScoped<CreateClientCommandHandler>();
 builder.Services.AddScoped<UpdateClientCommandHandler>();
 builder.Services.AddScoped<DeleteClientCommandHandler>();
+builder.Services.AddScoped<GetEstablishmentsQueryHandler>();
+builder.Services.AddScoped<GetEstablishmentByIdQueryHandler>();
+builder.Services.AddScoped<CreateEstablishmentCommandHandler>();
+builder.Services.AddScoped<UpdateEstablishmentCommandHandler>();
+builder.Services.AddScoped<DeleteEstablishmentCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>
