@@ -18,9 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `POST /api/clients`: Creates new client with FluentValidation rules.
   - `PUT /api/clients/{id}`: Updates client contact details and active state.
   - `DELETE /api/clients/{id}`: Soft-deletes (deactivates) client while preserving asset traceability.
+- **Establishment Management**:
+  - `GET /api/establishments`: Returns paginated establishments with optional filtering by `clientId`, search term, and active status.
+  - `GET /api/establishments/{id}`: Returns detailed establishment info with equipment count.
+  - `POST /api/establishments`: Creates a new establishment verifying client ownership within tenant.
+  - `PUT /api/establishments/{id}`: Updates establishment address, contact person, and status.
+  - `DELETE /api/establishments/{id}`: Soft-deletes establishment preserving equipment history.
 - **Testing**:
   - Unit tests for `UpdateCompanyProfileCommandValidator` data integrity.
   - Unit tests for `CreateClientCommandValidator` and `UpdateClientCommandValidator`.
+  - Unit tests for `CreateEstablishmentCommandValidator` and `UpdateEstablishmentCommandValidator`.
 
 ## [0.2.0-beta.1] - 2026-11-25
 

@@ -37,10 +37,10 @@
 - [x] ~~Tenant context validation & cross-tenant access tests (`HttpTenantContext` unit tests & isolation guards)~~
 - [x] ~~Angular auth module (login, register, forgot-password, auth guard, JWT interceptor)~~
 
-### Phase 3 — Business Management 🔄 In Progress (25%)
+### Phase 3 — Business Management 🔄 In Progress (35%)
 - [x] ~~Companies module (profile, settings, public portal visibility)~~
 - [x] ~~Clients CRUD + search/filter/pagination~~
-- [ ] Establishments CRUD
+- [x] ~~Establishments CRUD + client-scoped filtering, pagination, and soft delete~~
 - [ ] Equipment CRUD with categories
 - [ ] Equipment categories & states management
 - [ ] Photo upload for equipment
