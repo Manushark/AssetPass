@@ -92,8 +92,8 @@ frontend/
 - [x] Angular auth module (login, register, guards, interceptors)
 
 ### PHASE 3 — Business Management
-- [ ] Companies module (profile, settings)
-- [ ] Clients CRUD + search/filter/pagination
+- [x] Companies module (profile, settings)
+- [x] Clients CRUD + search/filter/pagination
 - [ ] Establishments CRUD
 - [ ] Equipment CRUD with categories
 - [ ] Equipment categories (configurable)

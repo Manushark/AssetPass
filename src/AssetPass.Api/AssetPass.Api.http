@@ -116,3 +116,80 @@ Content-Type: application/json
   "lastName": "Pérez"
 }
 
+### 12. Get Company Profile
+GET {{AssetPass.Api_HostAddress}}/api/company
+Authorization: Bearer {{authToken}}
+
+### 13. Update Company Profile (Owner / Admin)
+PUT {{AssetPass.Api_HostAddress}}/api/company
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "commercialName": "Mi Empresa Modificada S.R.L.",
+  "legalName": "Mi Empresa Legal S.R.L.",
+  "rnc": "131-00000-1",
+  "phone": "809-555-0199",
+  "email": "contacto@miempresa.com",
+  "address": "Av. Winston Churchill #100, Santo Domingo",
+  "currency": "DOP",
+  "timeZone": "America/Santo_Domingo",
+  "locale": "es-DO"
+}
+
+### 14. Update Public Portal Settings (Owner / Admin)
+PATCH {{AssetPass.Api_HostAddress}}/api/company/public-portal
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "showWarrantyInPublicPortal": true,
+  "showMaintenanceHistoryInPublicPortal": true,
+  "showNextMaintenanceInPublicPortal": true,
+  "showLastMaintenanceInPublicPortal": true,
+  "showEquipmentPhotoInPublicPortal": true,
+  "showCompanyInfoInPublicPortal": true
+}
+
+### 15. Get Clients (Paginated + Search)
+GET {{AssetPass.Api_HostAddress}}/api/clients?page=1&pageSize=10&search=
+Authorization: Bearer {{authToken}}
+
+### 16. Create Client (Owner / Admin / Technician)
+POST {{AssetPass.Api_HostAddress}}/api/clients
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Hospital General Metropolitano",
+  "clientType": 2,
+  "phone": "809-555-4000",
+  "email": "mantenimiento@hospital.com",
+  "address": "Av. Máximo Gómez #50, Santo Domingo",
+  "notes": "Cliente corporativo sector salud."
+}
+
+### 17. Get Client by ID
+GET {{AssetPass.Api_HostAddress}}/api/clients/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+### 18. Update Client (Owner / Admin / Technician)
+PUT {{AssetPass.Api_HostAddress}}/api/clients/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Hospital General Metropolitano (Sede Central)",
+  "clientType": 2,
+  "phone": "809-555-4001",
+  "email": "mantenimiento@hospital.com",
+  "address": "Av. Máximo Gómez #50, Santo Domingo",
+  "notes": "Actualización de contacto principal.",
+  "isActive": true
+}
+
+### 19. Delete Client (Soft Delete, Owner / Admin)
+DELETE {{AssetPass.Api_HostAddress}}/api/clients/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{authToken}}
+
+

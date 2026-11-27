@@ -37,9 +37,9 @@
 - [x] ~~Tenant context validation & cross-tenant access tests (`HttpTenantContext` unit tests & isolation guards)~~
 - [x] ~~Angular auth module (login, register, forgot-password, auth guard, JWT interceptor)~~
 
-### Phase 3 — Business Management ⏳ Pending
-- [ ] Companies module (profile, settings)
-- [ ] Clients CRUD + search/filter/pagination
+### Phase 3 — Business Management 🔄 In Progress (25%)
+- [x] ~~Companies module (profile, settings, public portal visibility)~~
+- [x] ~~Clients CRUD + search/filter/pagination~~
 - [ ] Establishments CRUD
 - [ ] Equipment CRUD with categories
 - [ ] Equipment categories & states management
@@ -88,7 +88,7 @@
 | Domain Enums | 8 | ✅ Complete |
 | API Endpoints | 0 | ⏳ Phase 2 |
 | Angular Components | 1 | 🔄 Scaffolded & Passing |
-| Backend Unit Tests | 34 | ✅ Passing (All 4 projects) |
+| Backend Unit Tests | 39 | ✅ Passing (All 4 projects) |
 | Frontend Unit Tests | 10 | ✅ Passing (Vitest) |
 | EF Core Migrations | 1 | ✅ InitialCreate Generated |
 

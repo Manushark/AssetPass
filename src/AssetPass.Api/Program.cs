@@ -10,6 +10,14 @@ using AssetPass.Application.Features.Auth.Commands.Logout;
 using AssetPass.Application.Features.Auth.Commands.RefreshToken;
 using AssetPass.Application.Features.Auth.Commands.RegisterTenant;
 using AssetPass.Application.Features.Auth.Commands.ResetPassword;
+using AssetPass.Application.Features.Clients.Commands.CreateClient;
+using AssetPass.Application.Features.Clients.Commands.DeleteClient;
+using AssetPass.Application.Features.Clients.Commands.UpdateClient;
+using AssetPass.Application.Features.Clients.Queries.GetClientById;
+using AssetPass.Application.Features.Clients.Queries.GetClients;
+using AssetPass.Application.Features.Company.Commands.UpdateCompanyProfile;
+using AssetPass.Application.Features.Company.Commands.UpdatePublicPortalSettings;
+using AssetPass.Application.Features.Company.Queries.GetCompanyProfile;
 using AssetPass.Application.Features.Users.Commands.ChangeUserRole;
 using AssetPass.Application.Features.Users.Commands.InviteUser;
 using AssetPass.Application.Features.Users.Queries.GetTenantUsers;
@@ -76,6 +84,14 @@ builder.Services.AddScoped<GetTenantUsersQueryHandler>();
 builder.Services.AddScoped<ChangeUserRoleCommandHandler>();
 builder.Services.AddScoped<InviteUserCommandHandler>();
 builder.Services.AddScoped<AcceptInvitationCommandHandler>();
+builder.Services.AddScoped<GetCompanyProfileQueryHandler>();
+builder.Services.AddScoped<UpdateCompanyProfileCommandHandler>();
+builder.Services.AddScoped<UpdatePublicPortalSettingsCommandHandler>();
+builder.Services.AddScoped<GetClientsQueryHandler>();
+builder.Services.AddScoped<GetClientByIdQueryHandler>();
+builder.Services.AddScoped<CreateClientCommandHandler>();
+builder.Services.AddScoped<UpdateClientCommandHandler>();
+builder.Services.AddScoped<DeleteClientCommandHandler>();
 
 // CORS
 builder.Services.AddCors(options =>

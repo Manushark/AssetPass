@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Company Management**:
+  - `GET /api/company`: Returns authenticated tenant company profile and configuration.
+  - `PUT /api/company`: Updates company commercial details, contact info, currency, timezone, and locale.
+  - `PATCH /api/company/public-portal`: Configures public equipment portal information visibility flags.
+- **Client Management**:
+  - `GET /api/clients`: Returns tenant-scoped paginated clients with search and filtering by client type and status.
+  - `GET /api/clients/{id}`: Returns client detail profile with linked establishments and equipment counts.
+  - `POST /api/clients`: Creates new client with FluentValidation rules.
+  - `PUT /api/clients/{id}`: Updates client contact details and active state.
+  - `DELETE /api/clients/{id}`: Soft-deletes (deactivates) client while preserving asset traceability.
+- **Testing**:
+  - Unit tests for `UpdateCompanyProfileCommandValidator` data integrity.
+  - Unit tests for `CreateClientCommandValidator` and `UpdateClientCommandValidator`.
+
 ## [0.2.0-beta.1] - 2026-11-25
 
 ### Added
